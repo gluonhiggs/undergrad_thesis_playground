@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2023-04-23'
+Description: 'CloudFormation stack for multiple environments'
+
+Mappings:
+  EnvironmentMap:
+    dev:
+      BucketName: dev-my-example-bucket
+    staging:
+      BucketName: staging-my-example-bucket
+    main:
+      BucketName: prod-my-example-bucket
+
+Resources:
+  RawBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !FindInMap [EnvironmentMap, !Ref Environment, BucketName]
+
+Parameters:
+  Environment:
+    Description: 'The current environment (dev, staging, or main)'
+    Type: String
+    AllowedValues:
+      - dev
+      - staging
+      - main
